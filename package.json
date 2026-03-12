@@ -1,0 +1,20 @@
+{
+  "name": "notification-platform",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "infrastructure",
+    "lambdas/*",
+    "shared"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "deploy": "cd infrastructure && npm run deploy",
+    "deploy:all": "cd infrastructure && npm run deploy:all",
+    "synth": "cd infrastructure && npm run synth",
+    "diff": "cd infrastructure && npm run diff"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}

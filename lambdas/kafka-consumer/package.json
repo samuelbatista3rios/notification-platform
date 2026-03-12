@@ -1,0 +1,12 @@
+{
+  "name": "@notification-platform/kafka-consumer",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@aws-sdk/client-sfn": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.0",
+    "typescript": "^5.4.0"
+  }
+}

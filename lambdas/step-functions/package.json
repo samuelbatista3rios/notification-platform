@@ -1,0 +1,12 @@
+{
+  "name": "@notification-platform/step-functions",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@aws-sdk/client-sns": "^3.0.0",
+    "@aws-sdk/client-s3": "^3.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}

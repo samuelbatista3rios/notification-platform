@@ -1,0 +1,17 @@
+{
+  "name": "@notification-platform/event-ingester",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/handler.ts",
+  "dependencies": {
+    "@aws-sdk/client-kafka": "^3.0.0",
+    "kafkajs": "^2.2.4",
+    "aws-msk-iam-sasl-signer-js": "^1.0.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.0",
+    "@types/uuid": "^9.0.0",
+    "typescript": "^5.4.0"
+  }
+}
