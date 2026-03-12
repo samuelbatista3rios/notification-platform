@@ -1,15 +1,3 @@
-/**
- * Step Functions Task: validate
- * ─────────────────────────────
- * Primeiro estado do orquestrador.
- * Valida se o evento tem todos os campos necessários e se os canais
- * solicitados são suportados.
- *
- * Input:  OrchestratorInput { event: NotificationEvent }
- * Output: ValidationResult  { valid, errors, event }
- *
- * O Step Functions passa o output deste estado como input do próximo.
- */
 
 import { createLogger } from '../../shared/src/utils/logger';
 import type { OrchestratorInput, ValidationResult } from '../../shared/src/types/events';
@@ -30,7 +18,6 @@ export const handler = async (input: OrchestratorInput): Promise<ValidationResul
 
   const errors: string[] = [];
 
-  // ─── Validações de negócio ────────────────────────────────────────────────
 
   if (!event.userId?.trim()) {
     errors.push('userId is required and cannot be empty');

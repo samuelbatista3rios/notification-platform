@@ -1,5 +1,4 @@
-// Logger estruturado para Lambda — emite JSON que o CloudWatch entende nativamente
-// e o AWS X-Ray consegue correlacionar.
+
 
 type LogLevel = 'DEBUG' | 'INFO' | 'WARN' | 'ERROR';
 

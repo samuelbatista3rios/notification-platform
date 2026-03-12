@@ -1,11 +1,4 @@
-/**
- * event-ingester
- * ──────────────
- * Recebe requests HTTP via API Gateway, valida o schema básico,
- * enriquece o evento e publica no Kafka (MSK Serverless via IAM auth).
- *
- * Fluxo: Client → API GW → esta Lambda → MSK Kafka (topic: notification.events)
- */
+
 
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { Kafka, Producer, CompressionTypes } from 'kafkajs';
@@ -17,9 +10,7 @@ import { createLogger } from '../../shared/src/utils/logger';
 // ─── Logger ──────────────────────────────────────────────────────────────────
 const logger = createLogger('event-ingester');
 
-// ─── Kafka Producer (singleton — reutilizado entre invocações) ────────────────
-// Em Lambda, variáveis fora do handler persistem entre "warm starts".
-// Isso evita reconectar ao Kafka a cada invocação — crucial para performance.
+
 let producer: Producer | null = null;
 
 async function getProducer(): Promise<Producer> {

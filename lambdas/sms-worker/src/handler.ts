@@ -1,15 +1,4 @@
-/**
- * sms-worker
- * ───────────
- * Consumer da SQS sms-queue. Envia SMS via AWS SNS (não confundir com o
- * SNS de fanout — SNS também tem API para envio direto de SMS).
- *
- * Nota: SNS tem dois usos distintos neste projeto:
- *   1. Fanout (pub/sub): NotificationTopic → SQS queues (feito no route.ts)
- *   2. SMS direto: SNS.publish({ PhoneNumber }) (feito aqui)
- *
- * Fluxo: SQS (sms-queue) → esta Lambda → SNS SMS → telefone do usuário
- */
+
 
 import { SQSEvent, SQSRecord, SQSBatchResponse } from 'aws-lambda';
 import { SNSClient, PublishCommand, MessageAttributeValue } from '@aws-sdk/client-sns';
@@ -53,10 +42,6 @@ async function processRecord(record: SQSRecord): Promise<void> {
   // ─── Trunca mensagem para o limite de SMS (160 chars por segmento) ────────
   const smsBody = truncateSms(message.body, 160);
 
-  // ─── SNS SMS Publish ──────────────────────────────────────────────────────
-  // SNS SMS tem dois tipos:
-  //   - Promotional: mais barato, pode ser bloqueado pelo carrier
-  //   - Transactional: mais caro, entrega garantida (usar para OTP, alertas)
   const smsType: MessageAttributeValue = {
     DataType: 'String',
     StringValue: message.priority === 'critical' || message.priority === 'high'
@@ -71,7 +56,7 @@ async function processRecord(record: SQSRecord): Promise<void> {
       'AWS.SNS.SMS.SMSType': smsType,
       'AWS.SNS.SMS.SenderID': {
         DataType: 'String',
-        StringValue: 'NOTIFAPP',  // Sender ID (nem todos os países suportam)
+        StringValue: 'NOTIFAPP',  // Sender ID 
       },
     },
   });

@@ -1,18 +1,3 @@
-/**
- * email-worker
- * ─────────────
- * Consumer da SQS email-queue. Triggered pelo SQS Event Source Mapping.
- * Processa cada mensagem e envia o email via AWS SES.
- *
- * CONCEITO — SQS Partial Batch Response:
- * Se processarmos 5 mensagens e a #3 falhar:
- *   - Sem partial batch: todas as 5 são re-enfileiradas (duplicatas para 1,2,4,5)
- *   - Com partial batch: só a #3 é re-enfileirada (correto!)
- *
- * Habilitamos com: reportBatchItemFailures: true no CDK + retornar { batchItemFailures }
- *
- * Fluxo: SQS (email-queue) → esta Lambda → SES (envio de email)
- */
 
 import { SQSEvent, SQSRecord, SQSBatchResponse } from 'aws-lambda';
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';

@@ -1,15 +1,3 @@
-/**
- * Step Functions Task: archive
- * ─────────────────────────────
- * Persiste o evento no S3 para auditoria, replay e analytics.
- *
- * Estratégia de particionamento: year/month/day/hour/correlationId.json
- * Isso facilita queries com Athena (partition pruning) e
- * evita arquivos grandes com muitos eventos.
- *
- * Input:  ValidationResult { valid, errors, event }
- * Output: ArchiveResult    { s3Key, event }
- */
 
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { createLogger } from '../../shared/src/utils/logger';
@@ -28,9 +16,7 @@ export const handler = async (input: ValidationResult): Promise<ArchiveResult> =
     eventType: event.eventType,
   });
 
-  // ─── Particionamento por data/hora ────────────────────────────────────────
-  // Seguimos a convenção Hive partitioning: year=YYYY/month=MM/day=DD/hour=HH
-  // Isso permite que o Athena faça partition pruning (consultas muito mais rápidas).
+
   const eventDate = new Date(event.timestamp);
   const year = eventDate.getUTCFullYear();
   const month = String(eventDate.getUTCMonth() + 1).padStart(2, '0');
@@ -39,7 +25,6 @@ export const handler = async (input: ValidationResult): Promise<ArchiveResult> =
 
   const s3Key = `events/year=${year}/month=${month}/day=${day}/hour=${hour}/${event.correlationId}.json`;
 
-  // Payload que salvamos no S3 — inclui tudo para replay completo
   const archivePayload = {
     _schemaVersion: '1.0',
     _archivedAt: new Date().toISOString(),
@@ -52,14 +37,14 @@ export const handler = async (input: ValidationResult): Promise<ArchiveResult> =
       Key: s3Key,
       Body: JSON.stringify(archivePayload, null, 2),
       ContentType: 'application/json',
-      // Metadata visível sem fazer download do objeto
+
       Metadata: {
         correlationId: event.correlationId,
         userId: event.userId,
         eventType: event.eventType,
         channels: event.channels.join(','),
       },
-      // Server-side encryption (SSE-S3 já é default no bucket, mas explicitamos)
+
       ServerSideEncryption: 'AES256',
     })
   );
